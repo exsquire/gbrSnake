@@ -5,9 +5,10 @@ Includes instructions for building a singularity image from a gbrs docker pull.
 ![gbrSnake Sample DAG](https://github.com/exsquire/gbrSnake/blob/master/img/gbrSnake.PNG)
 
 Building a gbrs singularity image:
-Root privilleges are impicit to working with docker and users of shared HPC resources are typically barred from these privilleges for the well-being the ecosystem. Recently, singularity (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459) has become the solution for containerization in HPC environments. The following instructions are a basic workflow for converting docker pulls to singularity images. 
+Root privilleges are impicit to working with docker and users of shared HPC resources are typically barred from these privilleges for the well-being the ecosystem. 
 
-Method:
+Recently, singularity (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459) has become the solution for containerization in HPC environments. The following instructions are a basic workflow for converting docker pulls to singularity images. 
+
 ```bash
 #Install docker and test installation
 $sudo apt install docker.io
