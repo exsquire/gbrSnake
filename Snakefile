@@ -12,13 +12,14 @@ tags = list(set(samples.tag))
 #For unique transprob files after pooling
 tagSamples = samples.drop_duplicates(subset='tag')
 ##### Rules #############################
+
 rule all:
 	input:
 		expand([
-		"bam/{tag}{seq}.bam",
-		"emase/{tag}{seq}.h5",
-		"output/emase_compress/{tag}{seq}.h5c"],
-		zip,tag = samples.tag.tolist(), seq = samples.seq.tolist()),
+		"bam/{run}/{run}.bam",
+		"emase/{run}/{run}.h5",
+		"output/emase_compress/{run}.h5c"],
+		run = samples.run.tolist()),
 		expand([
 		"output/pooled_emase/{tag}.pooled",
 		"output/multiway/{tag}/gbrs.quantified.multiway.genes.alignment_counts",
@@ -39,9 +40,10 @@ rule all:
 
 rule align_fastq:
 	input:
-		expand("input/{tag}{seq}.fastq.gz", zip ,tag = samples.tag.tolist(), seq = samples.seq.tolist())
+		"input/{run}.fastq.gz"
 	output:
-		temp(expand("bam/{tag}{seq}.bam", zip, tag =  samples.tag.tolist(), seq = samples.seq.tolist()))
+		temp("bam/{run}/{run}.bam")
+	priority: 7
 	shell:
 		"set +o pipefail; "
 		"export PATH=/opt/conda/envs/gbrs/bin:$PATH; "
@@ -50,9 +52,10 @@ rule align_fastq:
 
 rule bam_to_emase:
 	input:
-		expand("bam/{tag}{seq}.bam", zip, tag =  samples.tag.tolist(), seq = samples.seq.tolist())
+		"bam/{run}/{run}.bam"
 	output:
-		temp(expand("emase/{tag}{seq}.h5", zip, tag =  samples.tag.tolist(), seq = samples.seq.tolist()))
+		temp("emase/{run}/{run}.h5")
+	priority: 6
 	shell:
 		"set +o pipefail; "
 		"export PATH=/opt/conda/envs/gbrs/bin:$PATH; "
@@ -61,9 +64,10 @@ rule bam_to_emase:
 
 rule compress_emase:
 	input:
-		expand("emase/{tag}{seq}.h5",zip, tag =  samples.tag.tolist(), seq = samples.seq.tolist())
+		"emase/{run}/{run}.h5"
 	output:
-		expand("output/emase_compress/{tag}{seq}.h5c",zip, tag = samples.tag.tolist(), seq = samples.seq.tolist())
+		"output/emase_compress/{run}.h5c"
+	priority: 5
 	shell:
 		"set +o pipefail; "
 		". /opt/conda/etc/profile.d/conda.sh; "
@@ -75,6 +79,7 @@ rule pool_emase:
 		lambda wildcards: list("output/emase_compress/"+samples.run.loc[(samples.tag == wildcards.tag)]+".h5c")
 	output:
 		"output/pooled_emase/{tag}.pooled"
+	priority: 4
 	params:
 		pool=lambda wildcards, input: ",".join(input)
 	shell:
@@ -93,6 +98,7 @@ rule quantify_multiway:
 		"output/multiway/{tag}/gbrs.quantified.multiway.isoforms.alignment_counts",
 		"output/multiway/{tag}/gbrs.quantified.multiway.isoforms.expected_read_counts",
 		"output/multiway/{tag}/gbrs.quantified.multiway.isoforms.tpm"
+	priority: 3
 	params:
 		g2tRef = "/usr/share/gbrs/R84-REL1505/ref.gene2transcripts.tsv",
 		hybTarg = "/usr/share/gbrs/R84-REL1505/gbrs.hybridized.targets.info",
@@ -113,6 +119,7 @@ rule reconstruct_genome:
 		"output/reconstruct/{tag}/gbrs.reconstructed.genoprobs.npz",
 		"output/reconstruct/{tag}/gbrs.reconstructed.genotypes.npz",
 		"output/reconstruct/{tag}/gbrs.reconstructed.genotypes.tsv"
+	priority: 2
 	params:
 		transprob = lambda wildcards: tagSamples.loc[(tagSamples.tag == wildcards.tag),"transprob"].item(),
 		avecs = "/usr/share/gbrs/R84-REL1505/avecs.npz",
@@ -139,6 +146,7 @@ rule quantify_diploid:
 		"output/diploid/{tag}/gbrs.quantified.diploid.isoforms.alignment_counts",
 		"output/diploid/{tag}/gbrs.quantified.diploid.isoforms.expected_read_counts",
 		"output/diploid/{tag}/gbrs.quantified.diploid.isoforms.tpm"
+	priority: 1
 	params:
 		g2tRef = "/usr/share/gbrs/R84-REL1505/ref.gene2transcripts.tsv",
 		hybTarg = "/usr/share/gbrs/R84-REL1505/gbrs.hybridized.targets.info",
