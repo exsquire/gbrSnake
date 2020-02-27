@@ -43,7 +43,7 @@ rule align_fastq:
 		"input/{run}.fastq.gz"
 	output:
 		temp("bam/{run}/{run}.bam")
-	priority: 7
+	priority: 5
 	shell:
 		"set +o pipefail; "
 		"export PATH=/opt/conda/envs/gbrs/bin:$PATH; "
@@ -67,7 +67,7 @@ rule compress_emase:
 		"emase/{run}/{run}.h5"
 	output:
 		"output/emase_compress/{run}.h5c"
-	priority: 5
+	priority: 7
 	shell:
 		"set +o pipefail; "
 		". /opt/conda/etc/profile.d/conda.sh; "
