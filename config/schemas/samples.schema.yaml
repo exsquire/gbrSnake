@@ -1,0 +1,26 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: an entry in the sample sheet
+properties:
+  run:
+    type: string
+    description: Identifier for sequencer sample
+  tag:
+    type: string
+    description: the run name without sequencer information
+  sex:
+    type: string
+    description: sex of sample in M/F format
+  ngen:
+    type: integer
+    description: the DO mouse generation number of the sample
+  transprob:
+    type: string
+    description: file name of sample's transition probability matrix 
+
+required:
+  - run
+  - tag
+  - sex
+  - ngen
+  - transprob
