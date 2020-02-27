@@ -44,6 +44,8 @@ rule align_fastq:
 	output:
 		temp("bam/{run}/{run}.bam")
 	priority: 5
+	resources:
+		load = 1
 	shell:
 		"set +o pipefail; "
 		"export PATH=/opt/conda/envs/gbrs/bin:$PATH; "
