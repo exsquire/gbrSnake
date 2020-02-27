@@ -2,7 +2,7 @@
 Snakemake pipeline for automating a parallel gbrs workflow on a large HPC node, https://github.com/churchill-lab/gbrs. 
 Includes instructions for building a singularity image from a gbrs docker pull. 
 
-![gbrSnake Sample DAG](https://github.com/exsquire/gbrSnake/blob/master/img/gbrSnake_img.PNG)
+![gbrSnake Sample DAG](https://github.com/exsquire/gbrSnake/blob/master/img/gbrSnake_img2.PNG)
 
 Building a gbrs singularity image:
 Root privilleges are impicit to working with docker and users of shared HPC resources are typically barred from these privilleges for the well-being the ecosystem. 
