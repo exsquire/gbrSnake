@@ -9,6 +9,14 @@ Root privilleges are impicit to working with docker and users of shared HPC reso
 
 Recently, singularity (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459) has become the solution for containerization in HPC environments. The following instructions are a basic workflow for converting docker pulls to singularity images. 
 
+Main command:
+Runs pipeline using the gbrs singularity image (--use-singularity), continues with independent files if an error occurs (-k), limits the number of parallel align_fastq rules (--resources load = number of parallel alignment jobs), and redirects the stdout and stderr to a master log file. (&> master.log).
+
+```bash
+conda activate snakemake
+snakemake --use-singularity -k --resources load=80 &> master.log
+```
+
 ```bash
 #Install docker and test installation
 sudo apt install docker.io
